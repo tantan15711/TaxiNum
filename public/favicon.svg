@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="TaxiNum">
+  <rect width="64" height="64" rx="14" fill="#111827"/>
+  <path d="M15 41h34v8H15z" fill="#10B981"/>
+  <path d="M20 31h24l5 10H15z" fill="#FACC15"/>
+  <path d="M24 22h16l5 9H19z" fill="#10B981"/>
+  <path d="M26 25h12l3 6H23z" fill="#F8FAFC"/>
+  <path d="M18 43h6v4h-6zm11 0h6v4h-6zm11 0h6v4h-6z" fill="#111827"/>
+  <circle cx="22" cy="50" r="4" fill="#F8FAFC"/>
+  <circle cx="42" cy="50" r="4" fill="#F8FAFC"/>
+  <text x="32" y="18" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="900" fill="#F8FAFC">TN</text>
+</svg>
+
