@@ -18,6 +18,9 @@ create table if not exists public.drivers (
 
 alter table public.drivers enable row level security;
 
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on public.drivers to authenticated;
+
 drop policy if exists "drivers can read their own profile" on public.drivers;
 drop policy if exists "drivers can create their own profile" on public.drivers;
 drop policy if exists "drivers can update their own profile" on public.drivers;
