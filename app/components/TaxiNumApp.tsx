@@ -68,6 +68,10 @@ function normalizeSlug(value: string) {
   return slug || `taxista-${Math.floor(1000 + Math.random() * 9000)}`;
 }
 
+function profileSlug(name: string, userId: string) {
+  return normalizeSlug(`${name}-${userId.slice(0, 8)}`);
+}
+
 function initials(name: string) {
   const parts = name.trim().split(/\s+/).slice(0, 2);
   return parts.map((part) => part[0]?.toUpperCase()).join("") || "TN";
@@ -169,7 +173,7 @@ export default function TaxiNumApp() {
         .maybeSingle();
 
       if (error) {
-        setMessage("No pude cargar el perfil. Revisa la tabla de Supabase.");
+        setMessage(`No pude cargar el perfil: ${error.message}`);
         setSaveState("error");
         return;
       }
@@ -180,7 +184,7 @@ export default function TaxiNumApp() {
       }
 
       const newProfile: DriverProfile = {
-        public_slug: normalizeSlug(`${currentUser.name}-${currentUser.id.slice(0, 6)}`),
+        public_slug: profileSlug(currentUser.name, currentUser.id),
         display_name: currentUser.name,
         avatar_url: currentUser.avatarUrl,
         transfer_number: "",
@@ -200,7 +204,7 @@ export default function TaxiNumApp() {
         .single();
 
       if (createError) {
-        setMessage("No pude crear el perfil. Revisa permisos RLS en Supabase.");
+        setMessage(`No pude crear el perfil: ${createError.message}`);
         setSaveState("error");
         setProfile(newProfile);
         return;
@@ -382,7 +386,9 @@ export default function TaxiNumApp() {
     const cleanProfile = {
       ...nextProfile,
       display_name: nextProfile.display_name.trim() || "Taxista",
-      public_slug: nextProfile.public_slug || normalizeSlug(nextProfile.display_name),
+      public_slug: nextProfile.id
+        ? nextProfile.public_slug
+        : profileSlug(nextProfile.display_name, user.id),
       transfer_number: cleanTransferNumber(nextProfile.transfer_number),
       phone_number: nextProfile.phone_number.trim(),
       show_phone: Boolean(nextProfile.phone_number.trim() && nextProfile.show_phone),
@@ -420,7 +426,7 @@ export default function TaxiNumApp() {
 
     if (error) {
       setSaveState("error");
-      setMessage("No pude guardar. Revisa politicas RLS o slug duplicado.");
+      setMessage(`No pude guardar: ${error.message}`);
       return;
     }
 
@@ -502,8 +508,8 @@ export default function TaxiNumApp() {
   ) {
     setProfile((current) => {
       const next = { ...current, [key]: value };
-      if (key === "display_name" && !current.id) {
-        next.public_slug = normalizeSlug(String(value));
+      if (key === "display_name" && !current.id && user) {
+        next.public_slug = profileSlug(String(value), user.id);
       }
       return next;
     });

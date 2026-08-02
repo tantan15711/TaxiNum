@@ -18,6 +18,11 @@ create table if not exists public.drivers (
 
 alter table public.drivers enable row level security;
 
+drop policy if exists "drivers can read their own profile" on public.drivers;
+drop policy if exists "drivers can create their own profile" on public.drivers;
+drop policy if exists "drivers can update their own profile" on public.drivers;
+drop policy if exists "drivers can delete their own profile" on public.drivers;
+
 create policy "drivers can read their own profile"
 on public.drivers
 for select
@@ -61,6 +66,10 @@ grant select on public.driver_public_profiles to anon, authenticated;
 insert into storage.buckets (id, name, public)
 values ('driver-avatars', 'driver-avatars', true)
 on conflict (id) do nothing;
+
+drop policy if exists "drivers can upload their avatar" on storage.objects;
+drop policy if exists "drivers can update their avatar" on storage.objects;
+drop policy if exists "driver avatars are public" on storage.objects;
 
 create policy "drivers can upload their avatar"
 on storage.objects
