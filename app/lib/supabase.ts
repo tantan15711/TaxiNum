@@ -14,8 +14,13 @@ export type DriverProfile = {
   updated_at?: string | null;
 };
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const defaultSupabaseUrl = "https://zruhqmpfpihdyebrjqef.supabase.co";
+const defaultSupabasePublishableKey =
+  "sb_publishable_4ZEWx37JbaENJ3JlZmGi_Q_4torUIOo";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? defaultSupabaseUrl;
+const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? defaultSupabasePublishableKey;
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
@@ -32,4 +37,3 @@ export function getSupabaseBrowserClient() {
 
   return browserClient;
 }
-

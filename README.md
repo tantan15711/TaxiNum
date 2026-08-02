@@ -6,7 +6,7 @@ y genera un QR que lleva al cliente a una pagina publica para copiar ese numero.
 
 ## Stack
 
-- Next/Vinext + React + TypeScript
+- Next.js + React + TypeScript
 - Supabase Auth con Google
 - Supabase Postgres + Row Level Security
 - Supabase Storage para fotos de perfil
@@ -20,8 +20,8 @@ npm run dev
 npm run build
 ```
 
-La app funciona en modo demo si no existen variables de Supabase. Para activar
-Google real, crea `.env.local` usando `.env.example` como referencia.
+La app ya trae configurado el proyecto publico de Supabase. Las variables de
+entorno siguen disponibles para sobreescribir el proyecto desde Vercel o local.
 
 ## Supabase
 
@@ -31,11 +31,26 @@ Google real, crea `.env.local` usando `.env.example` como referencia.
 4. Crea `.env.local` con:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-key
+NEXT_PUBLIC_SUPABASE_URL=https://zruhqmpfpihdyebrjqef.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_4ZEWx37JbaENJ3JlZmGi_Q_4torUIOo
 ```
 
 El QR apunta a `/t/[slug]`. Esa pagina publica consulta una vista limitada para
 mostrar solo nombre, foto, numero de transferencia y telefono cuando el taxista
 decide hacerlo visible.
 
+## Deploy en Vercel
+
+1. Sube este repositorio a GitHub.
+2. En Vercel, importa el repositorio.
+3. Usa los defaults de Next.js:
+   - Build Command: `npm run build`
+   - Install Command: `npm install`
+   - Output Directory: no configurar
+4. En Supabase Authentication, agrega estos redirect URLs:
+   - `http://localhost:3000`
+   - `https://TU-DOMINIO-DE-VERCEL.vercel.app`
+
+La API URL que usa el SDK debe ser la base del proyecto:
+`https://zruhqmpfpihdyebrjqef.supabase.co`. No uses `/rest/v1/` en
+`NEXT_PUBLIC_SUPABASE_URL`.
