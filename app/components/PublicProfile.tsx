@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Check, Copy, Phone, ShieldCheck } from "lucide-react";
+import { Check, Copy, MessageCircle, ShieldCheck } from "lucide-react";
 import {
   getSupabaseBrowserClient,
   isSupabaseConfigured,
@@ -53,6 +53,18 @@ function readDemoProfile(slug: string) {
   } catch {
     return { ...sampleProfile, public_slug: slug || sampleProfile.public_slug };
   }
+}
+
+function whatsappUrl(phoneNumber: string, driverName: string) {
+  const digits = phoneNumber.replace(/\D/g, "");
+  const internationalNumber = digits.length === 10 ? `52${digits}` : digits;
+  const message = `Hola ${driverName}, te envio la captura de transferencia exitosa.`;
+
+  if (!internationalNumber) {
+    return null;
+  }
+
+  return `https://wa.me/${internationalNumber}?text=${encodeURIComponent(message)}`;
 }
 
 export default function PublicProfile({ slug }: { slug: string }) {
@@ -129,6 +141,11 @@ export default function PublicProfile({ slug }: { slug: string }) {
     );
   }
 
+  const transferReceiptUrl =
+    profile.show_phone && profile.phone_number
+      ? whatsappUrl(profile.phone_number, profile.display_name)
+      : null;
+
   return (
     <main className="public-page">
       <section className="public-card enter-up">
@@ -167,10 +184,15 @@ export default function PublicProfile({ slug }: { slug: string }) {
           {copied ? "Numero copiado" : "Copiar numero"}
         </button>
 
-        {profile.show_phone && profile.phone_number ? (
-          <a className="secondary-button phone-link" href={`tel:${profile.phone_number}`}>
-            <Phone size={18} />
-            Llamar al taxista
+        {transferReceiptUrl ? (
+          <a
+            className="secondary-button phone-link"
+            href={transferReceiptUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <MessageCircle size={18} />
+            Enviar captura de transferencia exitosa
           </a>
         ) : null}
 
